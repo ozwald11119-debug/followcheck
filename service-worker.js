@@ -1,6 +1,6 @@
-const CACHE = "follow-check-v7";
+const CACHE = "follow-check-v8";
 const ASSETS = [
-  "./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./apple-touch-icon.png"
+  "./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./user-icon.png"
 ];
 
 self.addEventListener("install", e => {

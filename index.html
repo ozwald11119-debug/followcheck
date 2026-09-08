@@ -218,12 +218,74 @@ header,.card,.progressWrap,.diffCard{
 .footerCredit svg{width:17px;height:17px;flex:0 0 17px}
 .footerCredit a:hover{transform:translateY(-1px)}
 
+
+/* v8 list polish */
+.avatar{
+  width:50px !important;
+  height:50px !important;
+  min-width:50px !important;
+  border-radius:16px !important;
+  padding:4px !important;
+  background:#fff6ed !important;
+  overflow:hidden;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.info{
+  min-width:0;
+  flex:1;
+}
+.name{
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.userMeta{
+  display:block !important;
+  margin-top:5px !important;
+}
+.userChip{
+  display:inline !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  font-size:11px !important;
+  color:var(--muted) !important;
+  overflow-wrap:anywhere;
+}
+.row{
+  align-items:center !important;
+}
+.rowActions{
+  align-items:center;
+}
+@media(max-width:640px){
+  .row{
+    display:grid !important;
+    grid-template-columns:50px minmax(0,1fr);
+    gap:10px !important;
+  }
+  .rowActions{
+    grid-column:1 / -1;
+    justify-content:flex-start !important;
+    padding-left:60px;
+  }
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
-    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK <small style="opacity:.55;font-size:11px">v7</small></span></div>
+    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK <small style="opacity:.55;font-size:11px">v8</small></span></div>
     <a class="toplink" href="#howto">使い方</a>
   </div>
 
@@ -593,13 +655,10 @@ function render(){
  arr.forEach(u=>{
    const row=document.createElement("div");
    row.className="row";
-   row.innerHTML=`<div class="avatar">${esc(u.slice(0,1).toUpperCase())}</div>
+   row.innerHTML=`<div class="avatar"><img src="user-icon.png" alt="" aria-hidden="true"></div>
    <div class="info">
      <div class="name">@${esc(u)}</div>
-     <div class="sub">${label(state.current)}</div>
-     <div class="userMeta">
-       <span class="userChip">ID / username: ${esc(u)}</span>
-     </div>
+     <div class="userMeta"><span class="userChip">Instagram ID：${esc(u)}</span></div>
    </div>
    <div class="rowActions">${actionButtons(u,state.current)}</div>`;
    list.appendChild(row)
