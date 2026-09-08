@@ -103,7 +103,7 @@ footer{font-size:11px;color:var(--muted);line-height:1.8;margin:23px 3px}
 <body>
 <div class="wrap">
   <div class="topbar">
-    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK</span></div>
+    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK <small style="opacity:.55;font-size:11px">v6</small></span></div>
     <a class="toplink" href="#howto">使い方</a>
   </div>
 
@@ -483,19 +483,35 @@ function render(){
 $("list").addEventListener("click",e=>{
  const btn=e.target.closest("button[data-action]");
  if(!btn)return;
- const u=btn.dataset.user,action=btn.dataset.action;
+
+ e.preventDefault();
+ e.stopPropagation();
+
+ const u=(btn.dataset.user||"").trim();
+ const action=btn.dataset.action;
+ if(!u)return;
+
  if(action==="hold"){
    state.removed.delete(u);
-   state.hold.add(u)
+   state.hold.add(u);
  }else if(action==="removed"){
    state.hold.delete(u);
-   state.removed.add(u)
+   state.removed.add(u);
  }else if(action==="restore"){
    state.hold.delete(u);
-   state.removed.delete(u)
+   state.removed.delete(u);
  }
+
  saveActions();
- update()
+
+ // 未チェック一覧では押した瞬間に見た目からも消す
+ if(state.current==="notBack" && (action==="hold" || action==="removed")){
+   const row=btn.closest(".row");
+   if(row) row.remove();
+ }
+
+ // 進捗・各タブもすぐ同期
+ update();
 });
 
 async function handle(files){
