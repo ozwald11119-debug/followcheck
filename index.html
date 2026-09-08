@@ -98,12 +98,132 @@ footer{font-size:11px;color:var(--muted);line-height:1.8;margin:23px 3px}
  .delta,.privacy{grid-template-columns:1fr}
  .install{align-items:flex-start;flex-direction:column}
 }
+
+/* v7 cute refresh */
+:root{
+  --bg:#fff9fc;
+  --card:#ffffff;
+  --text:#3a2f36;
+  --muted:#8e7f88;
+  --line:#f0dce7;
+  --accent:#ff7fb2;
+  --accent-soft:#ffe7f1;
+  --accent-2:#ffd7a8;
+  --success:#dff5e6;
+  --shadow:0 12px 32px rgba(126,72,99,.10);
+}
+body{
+  background:
+    radial-gradient(circle at 10% 0%, #fff0f6 0, transparent 28%),
+    radial-gradient(circle at 90% 10%, #fff5e9 0, transparent 30%),
+    var(--bg);
+  color:var(--text);
+}
+header,.card,.progressWrap,.diffCard{
+  box-shadow:var(--shadow);
+}
+.brand{
+  letter-spacing:.02em;
+}
+.brand img{
+  border-radius:18px;
+  box-shadow:0 6px 16px rgba(255,127,178,.22);
+}
+.btn{
+  border-radius:999px !important;
+  transition:.18s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{
+  background:linear-gradient(135deg,#ff8fbc,#ffb28d);
+  border:none;
+  color:#fff;
+}
+.btn.ghost{
+  background:#fff;
+}
+.btn.warn{
+  background:#fff8e9;
+}
+.btn.done{
+  background:#edf9f0;
+}
+.tab{
+  border-radius:999px !important;
+}
+.tab.active{
+  background:linear-gradient(135deg,#ff8fbc,#ffb28d) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+.row{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:10px;
+  background:#fff;
+  box-shadow:0 5px 16px rgba(126,72,99,.055);
+}
+.avatar{
+  background:linear-gradient(135deg,#ffe2ef,#fff0d9);
+  color:#9a5574;
+  border:none !important;
+  font-weight:700;
+}
+.name{
+  font-weight:800;
+  font-size:14px;
+}
+.sub{
+  color:var(--muted);
+  margin-top:3px;
+  line-height:1.45;
+}
+.userMeta{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+.userChip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 8px;
+  background:#fff7fb;
+  border:1px solid #f3dce8;
+  border-radius:999px;
+  font-size:11px;
+  color:#785e6c;
+}
+.footerCredit{
+  margin:28px auto 10px;
+  display:flex;
+  justify-content:center;
+}
+.footerCredit a{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:#6f5865;
+  background:#fff;
+  border:1px solid #f0dce7;
+  border-radius:999px;
+  padding:9px 13px;
+  box-shadow:0 8px 20px rgba(126,72,99,.07);
+  font-size:12px;
+  font-weight:700;
+}
+.footerCredit svg{width:17px;height:17px;flex:0 0 17px}
+.footerCredit a:hover{transform:translateY(-1px)}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
-    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK <small style="opacity:.55;font-size:11px">v6</small></span></div>
+    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK <small style="opacity:.55;font-size:11px">v7</small></span></div>
     <a class="toplink" href="#howto">使い方</a>
   </div>
 
@@ -474,7 +594,13 @@ function render(){
    const row=document.createElement("div");
    row.className="row";
    row.innerHTML=`<div class="avatar">${esc(u.slice(0,1).toUpperCase())}</div>
-   <div class="info"><div class="name">@${esc(u)}</div><div class="sub">${label(state.current)}</div></div>
+   <div class="info">
+     <div class="name">@${esc(u)}</div>
+     <div class="sub">${label(state.current)}</div>
+     <div class="userMeta">
+       <span class="userChip">ID / username: ${esc(u)}</span>
+     </div>
+   </div>
    <div class="rowActions">${actionButtons(u,state.current)}</div>`;
    list.appendChild(row)
  })
@@ -606,5 +732,17 @@ if("serviceWorker" in navigator){
  window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))
 }
 </script>
+
+<div class="footerCredit">
+  <a href="https://www.instagram.com/little_journey0330?stkn=eHE2M2VvMzdjZWN1&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram @little_journey0330">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="17.4" cy="6.8" r="1.1" fill="currentColor"/>
+    </svg>
+    <span>created by @little_journey0330</span>
+  </a>
+</div>
+
 </body>
 </html>

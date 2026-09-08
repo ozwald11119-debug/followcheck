@@ -48,3 +48,11 @@ Instagram / Metaのデータ書き出し形式が変わった場合はパーサ�
 - 操作後すぐ進捗・各タブを再計算
 - GitHub Pagesの更新が古いPWAキャッシュに負けにくいようHTMLをネットワーク優先に変更
 - 画面に v6 表示を追加
+
+
+## v7 デザイン・表示改善
+- 全体をピンク/ピーチ系のやわらかいデザインに刷新
+- 一覧で Instagram のID/ユーザー名が明確に分かる表示を追加
+- フッターに Instagram アイコン付きで `created by @little_journey0330` を追加
+- クレジットから指定Instagramアカウントへリンク
+- Service Workerをv7へ更新
