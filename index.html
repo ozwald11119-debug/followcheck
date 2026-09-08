@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111116">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="FOLLOW CHECK">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>FOLLOW CHECK｜Instagram相互フォローチェッカー</title>
+<style>
+:root{
+--bg:#f6f6f8;--card:#fff;--text:#17171b;--muted:#73737d;--line:#e7e7ec;
+--accent:#6857e5;--accent2:#e9508f;--soft:#f0edff;--danger:#c92862;--ok:#148c6b;
+--shadow:0 10px 34px rgba(20,20,35,.07)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
+.wrap{max-width:940px;margin:auto;padding:18px 15px 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 2px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:950;letter-spacing:.04em}
+.brand img{width:32px;height:32px;border-radius:9px}
+.toplink{font-size:12px;color:var(--muted);text-decoration:none}
+.hero{padding:30px 4px 14px}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--accent);margin-bottom:10px}
+h1{font-size:34px;line-height:1.13;letter-spacing:-.035em;margin:0 0 13px}
+.lead{margin:0;color:var(--muted);line-height:1.8;max-width:760px}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:17px}
+.badge{padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:21px;padding:18px;margin-top:15px;box-shadow:var(--shadow)}
+.drop{border:2px dashed #cfcfda;border-radius:17px;padding:29px 18px;text-align:center;background:#fbfbfd;transition:.2s}
+.drop.drag{border-color:var(--accent);background:var(--soft)}
+input[type=file]{display:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:13px;padding:13px 16px;font-size:14px;font-weight:850;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--text);color:#fff}
+.btn.accent{background:var(--accent);color:#fff}
+.btn.ghost{background:#f1f1f5;color:var(--text)}
+.btn.danger{background:#fff0f5;color:#b5225e}
+.btn.small{padding:9px 11px;font-size:12px}
+.note{font-size:12px;color:var(--muted);line-height:1.7}
+.status{margin-top:12px;font-size:13px;font-weight:800}
+.section-title{font-size:18px;font-weight:950;margin:0 0 4px}
+.section-desc{font-size:13px;color:var(--muted);line-height:1.65;margin:0}
+.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+.guide-step{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fafafd}
+.guide-icon{font-size:24px}
+.guide-no{font-size:11px;color:var(--accent);font-weight:900;margin-top:8px}
+.guide-title{font-weight:900;font-size:13px;margin-top:3px}
+.guide-copy{font-size:11px;color:var(--muted);line-height:1.6;margin-top:5px}
+.tip{margin-top:12px;background:var(--soft);border-radius:13px;padding:12px 13px;font-size:12px;line-height:1.7}
+.install{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.install-copy{min-width:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:13px}
+.metric{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff}
+.metric span{font-size:11px;color:var(--muted)}
+.metric b{display:block;font-size:24px;margin-top:6px}
+.metric.hot b{color:var(--danger)}
+.history{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:13px}
+.progressWrap{margin-top:14px;border:1px solid var(--line);border-radius:15px;padding:13px;background:#fff}
+.progressTop{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px}
+.progressTop b{font-size:14px}
+.progressBar{height:10px;background:#f1f1f4;border-radius:999px;overflow:hidden;margin-top:9px}
+.progressBar>span{display:block;height:100%;width:0;background:var(--text);border-radius:999px;transition:width .2s ease}
+.rowActions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn.warn{background:#fff7e8;border-color:#ead4a8;color:#7f5710}
+.btn.done{background:#eef8f0;border-color:#c8e3ce;color:#246033}
+.dataNote{font-size:11px;color:var(--muted);margin-top:7px}
+.pill{font-size:12px;background:#f3f3f6;border-radius:999px;padding:8px 10px}
+.delta{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:13px}
+.deltaBox{border:1px solid var(--line);border-radius:15px;padding:13px}
+.deltaBox span{font-size:11px;color:var(--muted)}
+.deltaBox b{display:block;font-size:22px;margin-top:5px}
+.tabs{display:flex;gap:7px;overflow:auto;padding:4px 0;margin-top:15px}
+.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 12px;cursor:pointer;font-weight:850;font-size:12px}
+.tab.active{background:var(--text);color:#fff;border-color:var(--text)}
+.toolbar{display:flex;gap:7px;align-items:center;margin:13px 0}
+.search{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:14px;background:#fff}
+.list{display:flex;flex-direction:column;gap:7px}
+.row{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:14px;padding:11px;background:#fff}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f4ba55,#d84082,#7057e8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;flex:none}
+.info{min-width:0;flex:1}
+.name{font-weight:850;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub{font-size:11px;color:var(--muted);margin-top:3px}
+.empty{text-align:center;padding:28px 10px;color:var(--muted)}
+.hidden{display:none!important}
+.privacy{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:13px}
+.privacy .box{border:1px solid var(--line);border-radius:15px;padding:14px}
+.privacy .box b{display:block;font-size:13px;margin-bottom:5px}
+.privacy .box span{font-size:11px;color:var(--muted);line-height:1.6}
+footer{font-size:11px;color:var(--muted);line-height:1.8;margin:23px 3px}
+@media(max-width:760px){
+ h1{font-size:28px}
+ .guide-grid{grid-template-columns:repeat(2,1fr)}
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .delta,.privacy{grid-template-columns:1fr}
+ .install{align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><img src="icon-192.png" alt=""><span>FOLLOW CHECK</span></div>
+    <a class="toplink" href="#howto">使い方</a>
+  </div>
+
+  <section class="hero">
+    <div class="eyebrow">INSTAGRAM FOLLOW ANALYZER</div>
+    <h1>フォローしてるのに、<br>フォローされてない人をチェック。</h1>
+    <p class="lead">Instagramから自分でダウンロードしたデータを読み込むだけ。ログイン情報は不要。比較も履歴保存も、この端末のブラウザ内で完結します。</p>
+    <div class="badges">
+      <span class="badge">🔐 ID・パスワード不要</span>
+      <span class="badge">📱 端末内で処理</span>
+      <span class="badge">🆓 会員登録なし</span>
+      <span class="badge">📲 ホーム画面追加対応</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div id="drop" class="drop">
+      <div style="font-size:31px">📦</div>
+      <div style="font-weight:950;font-size:18px;margin:6px 0 7px">Instagramデータを読み込む</div>
+      <div class="note" style="margin-bottom:14px">ZIP / JSON / HTML に対応。Instagramから取得したファイルをそのまま選べます。</div>
+      <label class="btn accent" for="files">ファイルを選ぶ</label>
+      <input id="files" type="file" multiple accept=".zip,.json,.html,.htm">
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <section id="howto" class="card">
+    <div class="section-title">データの取り方</div>
+    <p class="section-desc">Instagram / Meta側の表示名は変更されることがあります。次の順番を目印に進めればOKです。</p>
+    <div class="guide-grid">
+      <div class="guide-step"><div class="guide-icon">⚙️</div><div class="guide-no">STEP 1</div><div class="guide-title">アカウントセンターへ</div><div class="guide-copy">Instagramの設定から「アカウントセンター」を開きます。</div></div>
+      <div class="guide-step"><div class="guide-icon">🗂️</div><div class="guide-no">STEP 2</div><div class="guide-title">情報をダウンロード</div><div class="guide-copy">自分の情報・個人データに関する項目からダウンロードへ進みます。</div></div>
+      <div class="guide-step"><div class="guide-icon">👥</div><div class="guide-no">STEP 3</div><div class="guide-title">フォロワーとフォロー中</div><div class="guide-copy">Followers and following を含めてください。</div></div>
+      <div class="guide-step"><div class="guide-icon">🧾</div><div class="guide-no">STEP 4</div><div class="guide-title">JSONがおすすめ</div><div class="guide-copy">作成されたZIPをこのページに読み込めば判定できます。</div></div>
+    </div>
+    <div class="tip">💡 Instagramのパスワードをこのサイトへ入力する必要はありません。自分で取得したデータだけを使います。</div>
+  </section>
+
+  <section class="card">
+    <div class="install">
+      <div class="install-copy">
+        <div class="section-title">ホーム画面に追加できます</div>
+        <p class="section-desc">Safari / Chromeの共有・メニューから「ホーム画面に追加」。対応ブラウザでは下のボタンからインストールできます。</p>
+      </div>
+      <button id="installBtn" class="btn primary hidden">アプリとして追加</button>
+    </div>
+  </section>
+
+  <section id="results" class="hidden">
+    <section class="card">
+      <div class="section-title">今回の結果</div>
+      <p class="section-desc">読み込んだデータを現在の状態として表示します。</p>
+      <div class="grid">
+        <div class="metric"><span>フォロー中</span><b id="followingCount">0</b></div>
+        <div class="metric"><span>フォロワー</span><b id="followersCount">0</b></div>
+        <div class="metric"><span>相互フォロー</span><b id="mutualCount">0</b></div>
+        <div class="metric hot"><span>フォロバなし</span><b id="notBackCount">0</b></div>
+      </div>
+      <div class="history">
+        <button id="saveSnapshot" class="btn primary small">今回を履歴に保存</button>
+        <span id="snapshotInfo" class="pill">保存履歴なし</span>
+        <button id="clearHistory" class="btn danger small">履歴を削除</button>
+        <button id="clearAllData" class="btn danger small">端末データを全削除</button>
+      </div>
+      <div class="progressWrap">
+        <div class="progressTop">
+          <div><b>チェック進捗</b><div class="dataNote">解除済み・保留にした操作もこの端末に保存します。</div></div>
+          <div><b id="progressText">0 / 0</b></div>
+        </div>
+        <div class="progressBar"><span id="progressBar"></span></div>
+      </div>
+    </section>
+
+    <section id="diffCard" class="card hidden">
+      <div class="section-title">前回からの変化</div>
+      <p id="diffPeriod" class="section-desc"></p>
+      <div class="delta">
+        <div class="deltaBox"><span>新規フォロワー</span><b id="newFollowerCount">0</b></div>
+        <div class="deltaBox"><span>フォロー解除された</span><b id="lostFollowerCount">0</b></div>
+        <div class="deltaBox"><span>新しく相互になった</span><b id="newMutualCount">0</b></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tabs">
+        <button class="tab active" data-tab="notBack">未チェック</button>
+        <button class="tab" data-tab="hold">保留</button>
+        <button class="tab" data-tab="removed">解除済み</button>
+        <button class="tab" data-tab="mutual">相互</button>
+        <button class="tab" data-tab="onlyFollower">相手だけフォロー</button>
+        <button class="tab" data-tab="lostFollowers">フォロー解除</button>
+        <button class="tab" data-tab="newFollowers">新規フォロワー</button>
+        <button class="tab" data-tab="following">フォロー中すべて</button>
+        <button class="tab" data-tab="followers">フォロワーすべて</button>
+      </div>
+      <div class="toolbar">
+        <input id="search" class="search" placeholder="@username を検索">
+        <button id="csv" class="btn ghost small">一覧を保存</button>
+      </div>
+      <div id="list" class="list"></div>
+    </section>
+  </section>
+
+  <section class="card">
+    <div class="section-title">プライバシー設計</div>
+    <div class="privacy">
+      <div class="box"><b>パスワード不要</b><span>Instagramへの代理ログインは行いません。</span></div>
+      <div class="box"><b>外部送信しない</b><span>読み込んだフォロー情報はブラウザ内で処理します。</span></div>
+      <div class="box"><b>履歴も端末内</b><span>比較用履歴はlocalStorageに保存。サイトデータ削除で消えます。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    FOLLOW CHECKはInstagram / Metaの公式サービスではありません。InstagramのID・パスワードを入力しないでください。
+    Instagramのデータ書き出し形式が変更された場合、一時的に読み込み対応が必要になることがあります。
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+const state={
+  followers:new Set(),
+  following:new Set(),
+  current:"notBack",
+  previous:null,
+  removed:new Set(),
+  hold:new Set()
+};
+const $=id=>document.getElementById(id);
+const drop=$("drop"),input=$("files"),status=$("status");
+
+const HISTORY_KEY="followcheck:snapshots:v3";
+const DATA_KEY="followcheck:current:v5";
+const ACTIONS_KEY="followcheck:actions:v5";
+
+function cleanUser(s){
+ if(!s)return null;
+ s=String(s).trim().replace(/^@/,"");
+ try{
+   const u=new URL(s);
+   if(/(^|\.)instagram\.com$/i.test(u.hostname)){
+     const parts=u.pathname.split("/").filter(Boolean);
+     if(parts[0]==="_u" && parts[1]) s=parts[1];
+     else if(parts[0]) s=parts[0];
+   }
+ }catch(e){}
+ s=s.replace(/[?#].*$/,"").replace(/\/+$/,"").trim();
+ if(!s||s.length>100||/\s/.test(s))return null;
+ if(["instagram","accounts","explore","direct","reel","reels","p","_u"].includes(s.toLowerCase()))return null;
+ return s
+}
+function add(set,v){const u=cleanUser(v);if(u)set.add(u)}
+
+function walkJson(node,set){
+ if(node==null)return;
+ if(Array.isArray(node)){node.forEach(x=>walkJson(x,set));return}
+ if(typeof node==="object"){
+  if(node.string_list_data&&Array.isArray(node.string_list_data)){
+    node.string_list_data.forEach(x=>{
+      if(x.value)add(set,x.value);
+      else if(x.href)add(set,x.href)
+    })
+  }else{
+    if(node.title)add(set,node.title);
+    if(node.value)add(set,node.value);
+    if(node.href)add(set,node.href)
+  }
+  Object.values(node).forEach(v=>walkJson(v,set))
+ }
+}
+
+function targetForName(name){
+ const n=name.toLowerCase();
+ if(/followers(_\d+)?\.(json|html?)$/.test(n)||n.includes("/followers_"))return state.followers;
+ if(/following(_\d+)?\.(json|html?)$/.test(n)||n.includes("/following_")||(n.includes("following")&&!n.includes("followers")))return state.following;
+ return null
+}
+
+function parseJsonText(text,name){
+ const obj=JSON.parse(text),target=targetForName(name);
+ if(target){walkJson(obj,target);return}
+ if(obj.relationships_following)walkJson(obj.relationships_following,state.following);
+ if(obj.relationships_followers)walkJson(obj.relationships_followers,state.followers)
+}
+
+function parseHtmlText(text,name){
+ const target=targetForName(name);if(!target)return;
+ const doc=new DOMParser().parseFromString(text,"text/html");
+ const links=[...doc.querySelectorAll('a[href*="instagram.com"]')];
+ links.forEach(a=>{
+   const textUser=cleanUser(a.textContent);
+   const hrefUser=cleanUser(a.getAttribute("href"));
+   if(textUser) target.add(textUser);
+   else if(hrefUser) target.add(hrefUser);
+ });
+ if(target===state.following){
+   [...doc.querySelectorAll("h2")].forEach(h=>add(target,h.textContent));
+ }
+}
+
+async function parseFile(file,name=file.name){
+ const n=name.toLowerCase();
+ if(n.endsWith(".json"))parseJsonText(await file.text(),name);
+ else if(n.endsWith(".html")||n.endsWith(".htm"))parseHtmlText(await file.text(),name);
+ else if(n.endsWith(".zip")){
+  if(!window.JSZip)throw new Error("ZIP読み込み機能を取得できませんでした。通信環境をご確認ください。");
+  const zip=await JSZip.loadAsync(file);
+  const entries=Object.values(zip.files).filter(x=>!x.dir&&/\.(json|html?)$/i.test(x.name));
+  for(const e of entries){
+    if(!/follow/i.test(e.name))continue;
+    const blob=new Blob([await e.async("uint8array")]);
+    await parseFile(blob,e.name)
+  }
+ }
+}
+
+function loadJson(key,fallback){
+ try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}
+ catch(e){return fallback}
+}
+
+function saveCurrent(){
+ try{
+   localStorage.setItem(DATA_KEY,JSON.stringify({
+     savedAt:new Date().toISOString(),
+     followers:[...state.followers],
+     following:[...state.following]
+   }));
+   return true
+ }catch(e){
+   status.textContent="⚠️ 読み込みはできましたが、端末への自動保存に失敗しました。";
+   return false
+ }
+}
+
+function restoreCurrent(){
+ const d=loadJson(DATA_KEY,null);
+ if(!d||!Array.isArray(d.followers)||!Array.isArray(d.following))return false;
+ state.followers=new Set(d.followers);
+ state.following=new Set(d.following);
+ if(state.followers.size||state.following.size){
+   status.textContent=`✓ 前回のデータを復元：フォロー中 ${state.following.size} / フォロワー ${state.followers.size}`;
+   return true
+ }
+ return false
+}
+
+function saveActions(){
+ try{
+   localStorage.setItem(ACTIONS_KEY,JSON.stringify({
+     removed:[...state.removed],
+     hold:[...state.hold]
+   }))
+ }catch(e){}
+}
+
+function restoreActions(){
+ const a=loadJson(ACTIONS_KEY,{removed:[],hold:[]});
+ state.removed=new Set(Array.isArray(a.removed)?a.removed:[]);
+ state.hold=new Set(Array.isArray(a.hold)?a.hold:[]);
+}
+
+function calc(){
+ const following=[...state.following].sort();
+ const followers=[...state.followers].sort();
+ const mutual=following.filter(x=>state.followers.has(x));
+ const rawNotBack=following.filter(x=>!state.followers.has(x));
+ const removed=[...state.removed].filter(x=>rawNotBack.includes(x)).sort();
+ const hold=[...state.hold].filter(x=>rawNotBack.includes(x)&&!state.removed.has(x)).sort();
+ const notBack=rawNotBack.filter(x=>!state.removed.has(x)&&!state.hold.has(x));
+ const onlyFollower=followers.filter(x=>!state.following.has(x));
+
+ let lostFollowers=[],newFollowers=[],newMutual=[];
+ if(state.previous){
+  const pf=new Set(state.previous.followers||[]),pg=new Set(state.previous.following||[]);
+  lostFollowers=[...pf].filter(x=>!state.followers.has(x)).sort();
+  newFollowers=followers.filter(x=>!pf.has(x)).sort();
+  const oldMutual=new Set([...pg].filter(x=>pf.has(x)));
+  newMutual=mutual.filter(x=>!oldMutual.has(x)).sort()
+ }
+ return{
+   following,followers,mutual,rawNotBack,notBack,removed,hold,onlyFollower,
+   lostFollowers,newFollowers,newMutual
+ }
+}
+
+function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function label(k){return{
+  notBack:"未チェック",
+  hold:"保留中",
+  removed:"解除済みにしたユーザー",
+  mutual:"相互フォロー",
+  onlyFollower:"相手だけがあなたをフォロー",
+  lostFollowers:"前回はフォロワー / 今回はいない",
+  newFollowers:"前回はいなかった新規フォロワー",
+  following:"フォロー中",
+  followers:"フォロワー"
+}[k]||""}
+
+function loadHistory(){return loadJson(HISTORY_KEY,[])}
+function saveHistory(h){
+ try{localStorage.setItem(HISTORY_KEY,JSON.stringify(h.slice(-10)))}catch(e){
+   status.textContent="⚠️ 履歴の保存容量がいっぱいです。古い履歴を削除してください。"
+ }
+}
+function refreshPrevious(){
+ const h=loadHistory();
+ state.previous=h.length?h[h.length-1]:null;
+ $("snapshotInfo").textContent=state.previous
+   ?`前回保存：${new Date(state.previous.at).toLocaleString("ja-JP")}`
+   :"保存履歴なし"
+}
+
+function update(){
+ refreshPrevious();
+ const d=calc();
+ $("followingCount").textContent=d.following.length;
+ $("followersCount").textContent=d.followers.length;
+ $("mutualCount").textContent=d.mutual.length;
+ $("notBackCount").textContent=d.rawNotBack.length;
+ $("results").classList.remove("hidden");
+
+ const checked=d.removed.length+d.hold.length;
+ const total=d.rawNotBack.length;
+ const pct=total?Math.min(100,Math.round(checked/total*100)):100;
+ $("progressText").textContent=`${checked.toLocaleString()} / ${total.toLocaleString()}（残り ${d.notBack.length.toLocaleString()}）`;
+ $("progressBar").style.width=pct+"%";
+
+ if(state.previous){
+   $("diffCard").classList.remove("hidden");
+   $("newFollowerCount").textContent=d.newFollowers.length;
+   $("lostFollowerCount").textContent=d.lostFollowers.length;
+   $("newMutualCount").textContent=d.newMutual.length;
+   $("diffPeriod").textContent=`${new Date(state.previous.at).toLocaleString("ja-JP")} に保存した状態との比較`
+ }else $("diffCard").classList.add("hidden");
+
+ render()
+}
+
+function actionButtons(u,tab){
+ const open=`<a class="btn ghost small" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/${encodeURIComponent(u)}/">Instagramで開く</a>`;
+ if(tab==="notBack"){
+   return `${open}<button class="btn warn small" data-action="hold" data-user="${esc(u)}">保留</button><button class="btn done small" data-action="removed" data-user="${esc(u)}">解除済み</button>`;
+ }
+ if(tab==="hold"){
+   return `${open}<button class="btn ghost small" data-action="restore" data-user="${esc(u)}">未チェックへ戻す</button><button class="btn done small" data-action="removed" data-user="${esc(u)}">解除済み</button>`;
+ }
+ if(tab==="removed"){
+   return `${open}<button class="btn ghost small" data-action="restore" data-user="${esc(u)}">一覧へ戻す</button>`;
+ }
+ return open
+}
+
+function render(){
+ const d=calc();
+ const q=$("search").value.trim().toLowerCase().replace(/^@/,"");
+ let arr=d[state.current]||[];
+ if(q)arr=arr.filter(x=>x.toLowerCase().includes(q));
+
+ const list=$("list");
+ list.innerHTML="";
+ if(!arr.length){
+   list.innerHTML='<div class="empty">該当するユーザーはいません</div>';
+   return
+ }
+
+ arr.forEach(u=>{
+   const row=document.createElement("div");
+   row.className="row";
+   row.innerHTML=`<div class="avatar">${esc(u.slice(0,1).toUpperCase())}</div>
+   <div class="info"><div class="name">@${esc(u)}</div><div class="sub">${label(state.current)}</div></div>
+   <div class="rowActions">${actionButtons(u,state.current)}</div>`;
+   list.appendChild(row)
+ })
+}
+
+$("list").addEventListener("click",e=>{
+ const btn=e.target.closest("button[data-action]");
+ if(!btn)return;
+ const u=btn.dataset.user,action=btn.dataset.action;
+ if(action==="hold"){
+   state.removed.delete(u);
+   state.hold.add(u)
+ }else if(action==="removed"){
+   state.hold.delete(u);
+   state.removed.add(u)
+ }else if(action==="restore"){
+   state.hold.delete(u);
+   state.removed.delete(u)
+ }
+ saveActions();
+ update()
+});
+
+async function handle(files){
+ state.followers.clear();
+ state.following.clear();
+ status.textContent="読み込み中…";
+ try{
+   for(const f of files)await parseFile(f);
+   if(!state.followers.size&&!state.following.size)throw new Error("フォロワー／フォロー中のデータを見つけられませんでした。");
+   saveCurrent();
+   status.textContent=`✓ 読み込み完了：フォロー中 ${state.following.size} / フォロワー ${state.followers.size}（この端末に自動保存しました）`;
+   update()
+ }catch(e){
+   status.textContent="読み込みエラー：" + e.message
+ }
+}
+
+input.addEventListener("change",e=>handle([...e.target.files]));
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("drag")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drag")}));
+drop.addEventListener("drop",e=>handle([...e.dataTransfer.files]));
+
+document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ state.current=btn.dataset.tab;
+ render()
+}));
+$("search").addEventListener("input",render);
+
+$("saveSnapshot").addEventListener("click",()=>{
+ if(!state.followers.size&&!state.following.size)return;
+ const h=loadHistory();
+ h.push({at:new Date().toISOString(),followers:[...state.followers],following:[...state.following]});
+ saveHistory(h);
+ update();
+ status.textContent="✓ 今回の状態を履歴に保存しました。次回読み込み時に差分を表示します。"
+});
+
+$("clearHistory").addEventListener("click",()=>{
+ if(confirm("比較用の履歴だけを削除しますか？ 現在の一覧と解除済み・保留は残ります。")){
+   localStorage.removeItem(HISTORY_KEY);
+   state.previous=null;
+   update();
+   status.textContent="比較履歴を削除しました。"
+ }
+});
+
+$("clearAllData").addEventListener("click",()=>{
+ if(confirm("この端末に保存した現在の一覧・履歴・解除済み・保留をすべて削除しますか？")){
+   [HISTORY_KEY,DATA_KEY,ACTIONS_KEY].forEach(k=>localStorage.removeItem(k));
+   state.followers.clear();
+   state.following.clear();
+   state.removed.clear();
+   state.hold.clear();
+   state.previous=null;
+   $("results").classList.add("hidden");
+   status.textContent="端末内のFOLLOW CHECKデータをすべて削除しました。"
+ }
+});
+
+$("csv").addEventListener("click",()=>{
+ const d=calc(),arr=d[state.current]||[];
+ const csv="\uFEFF"+[["username","category"],...arr.map(x=>[x,label(state.current)])]
+   .map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
+ const b=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(b);
+ a.download=`followcheck_${state.current}.csv`;
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),3000)
+});
+
+restoreActions();
+refreshPrevious();
+if(restoreCurrent())update();
+
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{
+ e.preventDefault();
+ deferredPrompt=e;
+ $("installBtn").classList.remove("hidden")
+});
+$("installBtn").addEventListener("click",async()=>{
+ if(!deferredPrompt)return;
+ deferredPrompt.prompt();
+ await deferredPrompt.userChoice;
+ deferredPrompt=null;
+ $("installBtn").classList.add("hidden")
+});
+
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))
+}
+</script>
+</body>
+</html>
